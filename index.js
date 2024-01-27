@@ -7,6 +7,9 @@ app.get('/welcome',(req, res)=>{
 app.get('/goodbye',(req, res)=>{
     res.send('goodbye')
 })
+app.get('/name',(req, res)=>{
+    res.send(`Hello My name is ${process.env.NAME}`)
+})
 
 const port = process.env.PORT;
 

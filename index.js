@@ -1,25 +1,29 @@
-const express= require('express');
+const express = require('express');
+const mongoose = require('mongoose');
+const authRoutes = require('./routes/authRoutes');
+const petrolLogRoutes = require('./routes/petrolLogRoutes');
 
 require('dotenv').config();
-const app=express();
+const app = express();
 
-app.get('/welcome',(req, res)=>{
-    res.send('welcome')
-})
-app.get('/goodbye',(req, res)=>{
-    res.send('goodbye')
-})
-app.get('/name',(req, res)=>{
-    res.send(`Hello My name is ${process.env.NAME}`)
-})
-// console.log(`Hello My name is ${process.env.NAME}`)
+app.use(express.json());
 
-const port = process.env.PORT;
 
-app.listen(port, ()=>{
-    try {
-        console.log(('listining ') +port)
-    } catch (err) {
-        console.log((err));
-    }
-})
+mongoose.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('MongoDB connected');
+}).catch(err => {
+  console.error('MongoDB connection failed:', err.message);
+});
+// console.log()
+
+app.use('/auth', authRoutes);
+app.use('/logs', petrolLogRoutes);
+
+
+const PORT = process.env.PORT;
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});
